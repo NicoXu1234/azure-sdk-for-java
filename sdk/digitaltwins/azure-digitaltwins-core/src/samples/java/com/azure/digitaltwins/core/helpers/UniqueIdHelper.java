@@ -1,5 +1,6 @@
 package com.azure.digitaltwins.core.helpers;
 
+import com.azure.digitaltwins.core.DigitalTwinsAsyncClient;
 import com.azure.digitaltwins.core.DigitalTwinsClient;
 import com.azure.digitaltwins.core.implementation.models.ErrorResponseException;
 
@@ -10,10 +11,13 @@ import java.util.function.Function;
 public class UniqueIdHelper {
     private static final Random random = new Random();
 
+    public static String getUniqueModelId(String baseName, DigitalTwinsAsyncClient client) {
+        return getUniqueId(baseName, (modelId -> client.getModel(modelId).block().getId()));
+    }
+
     public static String getUniqueModelId(String baseName, DigitalTwinsClient client) {
         return getUniqueId(baseName, (modelId -> client.getModel(modelId).getId()));
     }
-
 
     private static String getUniqueId(String baseName, Function<String, String> getResource) {
         int maxAttempts = 10;
